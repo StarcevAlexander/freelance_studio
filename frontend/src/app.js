@@ -6,5 +6,4 @@ class App {
         new Router()
     }
 }
-
 (new App())

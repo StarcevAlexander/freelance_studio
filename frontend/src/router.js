@@ -5,6 +5,7 @@ import { SignUp } from './components/sign-up'
 export class Router {
     constructor() {
         this.titlePageElement = document.getElementById('title')
+        this.adminLteStyleElement = document.getElementById('adminlte_style')
         this.initEvents()
         this.routes = [
             {
@@ -29,28 +30,61 @@ export class Router {
                     document.body.classList.add('login-page')
                     document.body.style.height = '100vh'
                     new Login()
-                }
+                },
+                styles: ['icheck-bootstrap.min.css']
             },
             {
                 route: '/sign-up',
                 title: 'Регистрация',
                 filePathTemplate: '/templates/sign-up.html',
                 useLayout: false,
-                load: () => { new SignUp() }
-
+                load: () => {
+                    document.body.classList.add('register-page')
+                    document.body.style.height = '100vh'
+                    new SignUp()
+                },
+                styles: ['icheck-bootstrap.min.css']
             },
         ]
     }
     initEvents() {
         window.addEventListener('DOMContentLoaded', this.activateRoute.bind(this))
         window.addEventListener('popstate', this.activateRoute.bind(this))
+        document.addEventListener('click', this.openNewRoute.bind(this))
     }
 
+    async openNewRoute(e) {
+        let element = null
+        if (e.target.nodeName === 'A') {
+            element = e.target
+        } else if (e.target.parentNode.nodeName === 'A') {
+            element = e.target.parentNode
+        }
+        if (element) {
+            e.preventDefault()
+            const url = element.href.replace(window.location.origin, '')
+            if (!url || url === '/#' || url.startsWith('javascript:void(0)')) {
+                return
+            }
+            history.pushState({}, '', url)
+            console.log(url);
+            await this.activateRoute()
+        }
+    }
     async activateRoute() {
         const urlRoute = window.location.pathname
         const newRoute = this.routes.find(item => item.route === urlRoute)
 
         if (newRoute) {
+            if (newRoute.styles && newRoute.styles.length > 0) {
+                newRoute.styles.forEach(style => {
+                    const link = document.createElement('link')
+                    link.rel = 'stylesheet'
+                    link.href = '/css/' + style
+                    document.head.insertBefore(link, this.adminLteStyleElement)
+                });
+            }
+
             if (newRoute.title) {
                 this.titlePageElement.innerText = newRoute.title + ' | Freelance Studio'
             }
@@ -77,7 +111,8 @@ export class Router {
         }
         else {
             console.log('no route found');
-            window.location = '/404'
+            history.pushState({}, '', '/404')
+            await this.activateRoute()
         }
     }
 }
