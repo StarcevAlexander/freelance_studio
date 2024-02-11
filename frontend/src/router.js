@@ -31,6 +31,10 @@ export class Router {
                     document.body.style.height = '100vh'
                     new Login()
                 },
+                unload: () => {
+                    document.body.classList.remove('login-page')
+                    document.body.style.height = 'auto'
+                },
                 styles: ['icheck-bootstrap.min.css']
             },
             {
@@ -42,6 +46,10 @@ export class Router {
                     document.body.classList.add('register-page')
                     document.body.style.height = '100vh'
                     new SignUp()
+                },
+                unload: () => {
+                    document.body.classList.remove('register-page')
+                    document.body.style.height = 'auto'
                 },
                 styles: ['icheck-bootstrap.min.css']
             },
@@ -66,14 +74,26 @@ export class Router {
             if (!url || url === '/#' || url.startsWith('javascript:void(0)')) {
                 return
             }
+            const currentRoute = window.location.pathname
             history.pushState({}, '', url)
-            console.log(url);
-            await this.activateRoute()
+            await this.activateRoute(null, currentRoute)
         }
     }
-    async activateRoute() {
+    async activateRoute(e, oldRoute = null) {
         const urlRoute = window.location.pathname
         const newRoute = this.routes.find(item => item.route === urlRoute)
+
+        if (oldRoute) {
+            const currentRoute = this.routes.find(item => item.route === oldRoute)
+            if (currentRoute.styles && currentRoute.styles.length > 0) {
+                currentRoute.styles.forEach(style => {
+                    document.querySelector(`link[href='/css/${style}']`).remove()
+                });
+            }
+            if (currentRoute.unload && typeof currentRoute.unload === 'function') {
+                currentRoute.unload()
+            }
+        }
 
         if (newRoute) {
             if (newRoute.styles && newRoute.styles.length > 0) {
@@ -89,7 +109,7 @@ export class Router {
                 this.titlePageElement.innerText = newRoute.title + ' | Freelance Studio'
             }
             if (newRoute.filePathTemplate) {
-                document.body.className = ''
+
                 this.contentPageElement = document.getElementById('content')
                 if (newRoute.useLayout) {
                     this.contentPageElement.innerHTML = await fetch(newRoute.useLayout).then(response => response.text())
