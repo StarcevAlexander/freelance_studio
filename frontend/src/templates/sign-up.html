@@ -6,10 +6,10 @@
   <div class="card">
     <div class="card-body login-card-body">
       <p class="login-box-msg">Зарегистрировать нового пользователя</p>
-
+      <div class="error invalid-feedback text-center mb-3" id="common-error">Что-то пошло не так, проверьте заполняемые данные</div>
       <form>
         <div class="input-group mb-3">
-          <input type="text" class="form-control" placeholder="Имя" />
+          <input type="text" class="form-control" placeholder="Имя" id="name" />
           <div class="input-group-append">
             <div class="input-group-text">
               <span class="fas fa-user"></span>
@@ -17,7 +17,15 @@
           </div>
         </div>
         <div class="input-group mb-3">
-          <input type="email" class="form-control" placeholder="Email" />
+          <input type="text" class="form-control" placeholder="Фамилия" id="lastName" />
+          <div class="input-group-append">
+            <div class="input-group-text">
+              <span class="fas fa-user"></span>
+            </div>
+          </div>
+        </div>
+        <div class="input-group mb-3">
+          <input type="email" class="form-control" placeholder="Email" id="email" />
           <div class="input-group-append">
             <div class="input-group-text">
               <span class="fas fa-envelope"></span>
@@ -25,7 +33,7 @@
           </div>
         </div>
         <div class="input-group mb-3">
-          <input type="password" class="form-control" placeholder="Пароль" />
+          <input type="password" class="form-control" placeholder="Пароль" id="password" />
           <div class="input-group-append">
             <div class="input-group-text">
               <span class="fas fa-lock"></span>
@@ -33,7 +41,7 @@
           </div>
         </div>
         <div class="input-group mb-3">
-          <input type="password" class="form-control" placeholder="Повторите пароль" />
+          <input type="password" class="form-control" placeholder="Повторите пароль" id="password-repeat" />
           <div class="input-group-append">
             <div class="input-group-text">
               <span class="fas fa-lock"></span>
@@ -43,14 +51,14 @@
         <div class="row mb-3">
           <div class="col-12">
             <div class="icheck-primary">
-              <input type="checkbox" id="remember" />
-              <label for="remember"> Я согласен <a href="javascript:void(0)">с условиями</a></label>
+              <input type="checkbox" id="agree" />
+              <label for="agree"> Я согласен <a href="javascript:void(0)">с условиями</a></label>
             </div>
           </div>
         </div>
         <div class="row">
           <div class="col-12">
-            <button type="button" class="btn btn-primary btn-block">Зарегистрироваться</button>
+            <button type="button" class="btn btn-primary btn-block" id="process-button">Зарегистрироваться</button>
           </div>
         </div>
       </form>
