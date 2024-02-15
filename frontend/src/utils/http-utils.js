@@ -1,34 +1,58 @@
 import config from '../config/config';
+import { AuthUtils } from './auth-utils';
 
 export class HttpUtils {
-    static async request(url, method = 'GET', body = null) {
+    static async request(url, method = 'GET', useAuth = true, body = null) {
         const result = {
             error: false,
-            response: null
+            response: null,
         }
+
         let myHeaders = new Headers();
         myHeaders.append("Content-Type", "application/json");
+
+        let token = null
+        if (useAuth) {
+            token = AuthUtils.getAuthInfo(AuthUtils.accessTokenKey)
+            if (token) {
+                myHeaders.append("authorization", token);
+            }
+        }
+
         let requestOptions = {
             method: method,
             headers: myHeaders,
-            body: JSON.stringify(body),
             redirect: 'follow'
         }
+        if (!useAuth) {
+            requestOptions.body = JSON.stringify(body)
+        }
+
+        let res = null
         await fetch(config.api + url, requestOptions)
-            .then((response) => response.json())
-            .then(response => {
-                if (response.status < 200 || response.status > 300) {
-                    result.error = true
-                    return result
+            .then((response) =>
+                res = response)
+            .then((response) =>
+                response.json())
+            .then((response) => {
+                if (res.status < 200 || res.status > 300) {
+                    if (useAuth && res.status === 401) {
+                        if (!token) {
+                            result.redirect = '/login'
+                        }
+                        // токен устарел
+                    }
                 }
-                result.response = response;
+                result.response = response
             }
             )
             .catch((error) => {
-                console.error(error)
-                result.error = true
-                return result
+                console.log(error);
+                result.error = true;
             });
-        return result
+
+
+        return result;
     }
+
 }

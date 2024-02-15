@@ -1,7 +1,8 @@
 import { Dashboard } from './components/dashbord'
-import { Login } from './components/login'
-import { Logout } from './components/logout'
-import { SignUp } from './components/sign-up'
+import { FreelancersList } from './components/freelancers/freelancers-list'
+import { Login } from './components/auth/login'
+import { Logout } from './components/auth/logout'
+import { SignUp } from './components/auth/sign-up'
 
 export class Router {
     constructor() {
@@ -12,20 +13,22 @@ export class Router {
             {
                 route: '/',
                 title: 'Дашборд',
-                filePathTemplate: '/templates/dashboard.html',
+                filePathTemplate: '/templates/pages/dashboard.html',
                 useLayout: '/templates/layout.html',
                 load: () => { new Dashboard() }
             },
             {
-                route: '/404',
-                title: 'Страница не найдена',
-                filePathTemplate: '/templates/404.html',
-                useLayout: false,
+                route: '/freelancers',
+                title: 'Фрилансеры',
+                filePathTemplate: '/templates/pages/freelancers/list.html',
+                useLayout: '/templates/layout.html',
+                load: () => { new FreelancersList(this.openNewRoute.bind(this)) }
             },
             {
                 route: '/login',
+
                 title: 'Авторизация',
-                filePathTemplate: '/templates/login.html',
+                filePathTemplate: '/templates/pages/auth/login.html',
                 useLayout: false,
                 load: () => {
                     document.body.classList.add('login-page')
@@ -39,15 +42,9 @@ export class Router {
                 styles: ['icheck-bootstrap.min.css']
             },
             {
-                route: '/logout',
-                load: () => {
-                    new Logout(this.openNewRoute.bind(this))
-                },
-            },
-            {
                 route: '/sign-up',
                 title: 'Регистрация',
-                filePathTemplate: '/templates/sign-up.html',
+                filePathTemplate: '/templates/pages/auth/sign-up.html',
                 useLayout: false,
                 load: () => {
                     document.body.classList.add('register-page')
@@ -59,6 +56,18 @@ export class Router {
                     document.body.style.height = 'auto'
                 },
                 styles: ['icheck-bootstrap.min.css']
+            },
+            {
+                route: '/logout',
+                load: () => {
+                    new Logout(this.openNewRoute.bind(this))
+                },
+            },
+            {
+                route: '/404',
+                title: 'Страница не найдена',
+                filePathTemplate: '/templates/pages/404.html',
+                useLayout: false,
             },
         ]
     }
