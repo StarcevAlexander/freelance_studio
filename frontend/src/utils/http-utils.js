@@ -35,14 +35,6 @@ export class HttpUtils {
             .then((response) =>
                 response.json())
             .then((response) => {
-                if (res.status < 200 || res.status > 300) {
-                    if (useAuth && res.status === 401) {
-                        if (!token) {
-                            result.redirect = '/login'
-                        }
-                        // токен устарел
-                    }
-                }
                 result.response = response
             }
             )
@@ -51,6 +43,23 @@ export class HttpUtils {
                 result.error = true;
             });
 
+        if (res.status < 200 || res.status > 300) {
+            if (useAuth && res.status === 401) {
+                if (!token) {
+                    result.redirect = '/login'
+                }
+                else {
+                    const updateTokenResult = await AuthUtils.updateRefreshToken()
+                    if (updateTokenResult) {
+                        return this.request(url, method, useAuth, body)
+                    }
+                    else {
+                        result.redirect = '/login'
+                    }
+
+                }
+            }
+        }
 
         return result;
     }
