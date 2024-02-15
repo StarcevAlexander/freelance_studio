@@ -116,7 +116,6 @@ export class Router {
                 this.titlePageElement.innerText = newRoute.title + ' | Freelance Studio'
             }
             if (newRoute.filePathTemplate) {
-
                 this.contentPageElement = document.getElementById('content')
                 if (newRoute.useLayout) {
                     this.contentPageElement.innerHTML = await fetch(newRoute.useLayout).then(response => response.text())

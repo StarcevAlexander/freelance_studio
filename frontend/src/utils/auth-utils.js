@@ -17,7 +17,7 @@ export class AuthUtils {
     }
     static getAuthInfo(key = null) {
         if (key && [this.accessTokenKey, this.refreshTokenKey, this.userInfoTokenKey].includes(key)) {
-            localStorage.getItem(key)
+            return localStorage.getItem(key)
         }
         else {
             return {

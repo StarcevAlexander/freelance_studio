@@ -1,4 +1,5 @@
 import { AuthUtils } from '../utils/auth-utils'
+import { HttpUtils } from '../utils/http-utils'
 
 export class SignUp {
     constructor(openNewRoute) {
@@ -86,34 +87,18 @@ export class SignUp {
     async signup() {
         this.commonErrorElement.style.display = 'none'
         if (this.validateForm()) {
-            let myHeaders = new Headers();
-            myHeaders.append("Content-Type", "application/json");
-            let requestOptions = {
-                method: 'POST',
-                headers: myHeaders,
-                body: JSON.stringify({
-                    name: this.nameElement.value,
-                    lastName: this.lastNameElement.value,
-                    email: this.emailElement.value,
-                    password: this.passwordElement.value,
-                }),
-                redirect: 'follow'
-            };
-
-            await fetch("http://localhost:3000/api/signup", requestOptions)
-                .then(response => response.json())
-                .then(result => {
-                    if (result.error || !result.accessToken || !result.refreshToken || !result.id || !result.name) {
-                        this.commonErrorElement.style.display = 'block'
-                        console.log(error);
-                        return
-                    }
-                    AuthUtils.saveAuthInfo(result.accessToken, result.refreshToken, { id: result.id, name: result.name })
-                    window.location.href = '/'
-                    // this.openNewRoute('/')
-                }
-                )
-                .catch(error => console.log('error', error));
+            const result = await HttpUtils.request('/signup', 'POST', {
+                name: this.nameElement.value,
+                lastName: this.lastNameElement.value,
+                email: this.emailElement.value,
+                password: this.passwordElement.value,
+            })
+            if (result.error || !result.response || (result.response && !result.response.accessToken || !result.response.refreshToken || !result.response.id || !result.response.name)) {
+                this.commonErrorElement.style.display = 'block'
+                return
+            }
+            AuthUtils.saveAuthInfo(result.response.accessToken, result.response.refreshToken, { id: result.response.id, name: result.response.name })
+            window.location.href = '/'
         }
     }
 }

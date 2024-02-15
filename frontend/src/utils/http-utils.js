@@ -6,33 +6,29 @@ export class HttpUtils {
             error: false,
             response: null
         }
-
-        const params = {
+        let myHeaders = new Headers();
+        myHeaders.append("Content-Type", "application/json");
+        let requestOptions = {
             method: method,
-            headers: {
-                "Content-Type": "application/json",
-                "Accept": "application/json"
-            },
-            // redirect: 'follow'
+            headers: myHeaders,
+            body: JSON.stringify(body),
+            redirect: 'follow'
         }
-
-        if (body) {
-            params.body = JSON.stringify(body)
-        }
-
-        let response = null
-        try {
-            response = await fetch(config.api + url, requestOptions)
-            result.response = await response.json()
-        } catch (error) {
-            result.error = true
-            return result
-        }
-
-        if (response.status < 200 || response.status > 300) {
-            result.error = true
-
-        }
+        await fetch(config.api + url, requestOptions)
+            .then((response) => response.json())
+            .then(response => {
+                if (response.status < 200 || response.status > 300) {
+                    result.error = true
+                    return result
+                }
+                result.response = response;
+            }
+            )
+            .catch((error) => {
+                console.error(error)
+                result.error = true
+                return result
+            });
         return result
     }
 }
