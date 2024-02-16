@@ -38,11 +38,13 @@ module.exports = {
                 { from: "./src/static/images", to: "images" },
                 { from: "./node_modules/admin-lte/plugins/fontawesome-free/webfonts", to: "webfonts" },
                 { from: "./node_modules/admin-lte/plugins/fontawesome-free/css/all.min.css", to: "css" },
-                { from: "./node_modules/admin-lte/plugins/icheck-bootstrap/icheck-bootstrap.min.css", to: "css" },
                 { from: "./node_modules/admin-lte/dist/css/adminlte.min.css", to: "css" },
-                { from: "./node_modules/admin-lte/plugins/jquery/jquery.min.js", to: "js" },
                 { from: "./node_modules/admin-lte/dist/js/adminlte.min.js", to: "js" },
-
+                { from: "./node_modules/admin-lte/plugins/jquery/jquery.min.js", to: "js" },
+                { from: "./node_modules/admin-lte/plugins/icheck-bootstrap/icheck-bootstrap.min.css", to: "css" },
+                { from: "./node_modules/admin-lte/plugins/datatables-bs4/css/dataTables.bootstrap4.min.css", to: "css" },
+                { from: "./node_modules/admin-lte/plugins/datatables/jquery.dataTables.min.js", to: "js" },
+                { from: "./node_modules/admin-lte/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js", to: "js" },
             ],
         }),
     ]

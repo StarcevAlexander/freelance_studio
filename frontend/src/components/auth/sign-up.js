@@ -5,8 +5,7 @@ export class SignUp {
     constructor(openNewRoute) {
         this.openNewRoute = openNewRoute
         if (AuthUtils.getAuthInfo(AuthUtils.accessTokenKey)) {
-            return window.location.href = '/'
-            // return this.openNewRoute('/')
+            return this.openNewRoute('/')
         }
 
         this.nameElement = document.getElementById('name')
@@ -98,7 +97,7 @@ export class SignUp {
                 return
             }
             AuthUtils.saveAuthInfo(result.response.accessToken, result.response.refreshToken, { id: result.response.id, name: result.response.name })
-            window.location.href = '/'
+            return this.openNewRoute('/')
         }
     }
 }

@@ -5,8 +5,7 @@ export class Logout {
     constructor(openNewRoute) {
         this.openNewRoute = openNewRoute
         if (!AuthUtils.getAuthInfo(AuthUtils.accessTokenKey) || !AuthUtils.getAuthInfo(AuthUtils.refreshTokenKeys)) {
-            // return this.openNewRoute('/')
-            return window.location.href = '/login'
+            return this.openNewRoute('/')
         }
         this.logout().then()
     }
@@ -16,6 +15,6 @@ export class Logout {
             refreshToken: AuthUtils.getAuthInfo(AuthUtils.refreshTokenKeys),
         })
         AuthUtils.removeAuthInfo()
-        window.location.href = '/login'
+        return this.openNewRoute('/login')
     }
 }
