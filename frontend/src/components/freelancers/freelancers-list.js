@@ -1,4 +1,5 @@
 import config from '../../config/config';
+import { CommonUtils } from '../../utils/common-utils';
 import { HttpUtils } from '../../utils/http-utils';
 
 export class FreelancersList {
@@ -26,27 +27,24 @@ export class FreelancersList {
             trElement.insertCell().innerHTML = freelancers[index].avatar ? `<img class='freelancer-avatar' src='${config.host}${freelancers[index].avatar}' alt="user image">` : ''
             trElement.insertCell().innerText = `${freelancers[index].name} ${freelancers[index].lastName}`
             trElement.insertCell().innerText = freelancers[index].email
-            let levelHtml = null
-            switch (freelancers[index].level) {
-                case config.freelancerLevels.junior:
-                    levelHtml = '<span class ="badge badge-info">Junior</span>'
-                    break;
-                case config.freelancerLevels.middle:
-                    levelHtml = '<span class ="badge badge-warning">Middle</span>'
-                    break;
-                case config.freelancerLevels.senior:
-                    levelHtml = '<span class ="badge badge-success">Senior</span>'
-                    break;
-                default:
-                    levelHtml = '<span class ="badge badge-secondary">Unknown</span>'
-                    break;
-            }
-            trElement.insertCell().innerHTML = levelHtml
+            trElement.insertCell().innerHTML = CommonUtils.getLevelHtml(freelancers[index].level)
             trElement.insertCell().innerText = freelancers[index].education
             trElement.insertCell().innerText = freelancers[index].location
             trElement.insertCell().innerText = freelancers[index].skills
-            trElement.insertCell().innerHTML = '<div class ="freelancer-tools">' + `<a href='/freelancers/view?id=${freelancers[index].id} ' class='fas fa-eye'></a >` + `<a href='/freelancers/edit?id=${freelancers[index].id} ' class='fas fa-edit'></a >` + `<a href='/freelancers/delete?id=${freelancers[index].id}' class='fas fa-trash'></a >` + '</div>'
+            trElement.insertCell().innerHTML = '<div class ="freelancer-tools">' + `<a href='/freelancers/view?id=${freelancers[index].id} ' class='fas fa-eye'></a >` + `<a href='/freelancers/edit?id=${freelancers[index].id}' class='fas fa-edit'></a >` + `<a href='/freelancers/delete?id=${freelancers[index].id}' class='fas fa-trash'></a >` + '</div>'
             recordsElement.appendChild(trElement)
         }
+
+        new DataTable('#data-table', {
+            language: {
+                'lengthMenu': 'Показывать  _MENU_ записей на странице',
+                "search": "Фильтр:",
+                "info": "Страница _PAGE_ из _PAGES_",
+                "paginate": {
+                    "next": "Вперёд",
+                    "previous": "Назад"
+                },
+            }
+        })
     }
 }

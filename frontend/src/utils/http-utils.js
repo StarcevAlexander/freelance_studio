@@ -24,7 +24,7 @@ export class HttpUtils {
             headers: myHeaders,
             redirect: 'follow'
         }
-        if (!useAuth) {
+        if (body) {
             requestOptions.body = JSON.stringify(body)
         }
 
