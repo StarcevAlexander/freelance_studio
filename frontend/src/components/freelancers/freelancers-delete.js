@@ -8,9 +8,7 @@ export class FreelancersDelete {
         if (!id) {
             return this.openNewRoute('/')
         }
-        if (id) {
-            this.deleteFreelancer(id).then()
-        }
+        this.deleteFreelancer(id).then()
     }
     async deleteFreelancer(id) {
         const result = await HttpUtils.request('/freelancers/' + id, 'DELETE', true)

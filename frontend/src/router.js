@@ -12,6 +12,7 @@ import { OrdersList } from './components/orders/orders-list'
 import { OrdersView } from './components/orders/orders-view'
 import { OrdersCreate } from './components/orders/orders-create'
 import { OrdersEdit } from './components/orders/orders-edit'
+import { OrdersDelete } from './components/orders/orders-delete'
 
 export class Router {
     constructor() {
@@ -164,6 +165,11 @@ export class Router {
                     'select2.full.min.js'
                 ]
             },
+            {
+                route: '/orders/delete',
+                load: () => { new OrdersDelete(this.openNewRoute.bind(this)) },
+
+            }
         ]
     }
     initEvents() {
