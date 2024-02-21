@@ -11,9 +11,7 @@ export class FreelancersEdit {
         if (!id) {
             return this.openNewRoute('/')
         }
-        if (id) {
-            this.getFreelancer(id).then()
-        }
+        this.getFreelancer(id).then()
 
         this.avatarInputElement = document.getElementById('avatarInput')
         this.nameInputElement = document.getElementById('nameInput')

@@ -135,14 +135,14 @@ export class OrdersCreate {
 
             const createdData = {
                 description: this.descriptionInputElement.value,
-                deadlineDate: this.deadlinedDate._d,
-                scheduledDate: this.scheduledDate._d,
+                deadlineDate: this.deadlinedDate.toISOString(),
+                scheduledDate: this.scheduledDate.toISOString(),
                 freelancer: this.freelancerSelectElement.value,
                 status: this.statusSelectElement.value,
                 amount: parseInt(this.amountInputElement.value)
             }
             if (this.completeDate) {
-                createdData.completeDate = this.completeDate._d
+                createdData.completeDate = this.completeDate.toISOString()
             }
 
             const result = await HttpUtils.request('/orders', 'POST', true, createdData)
