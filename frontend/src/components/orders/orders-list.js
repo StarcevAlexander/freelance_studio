@@ -29,8 +29,11 @@ export class OrdersList {
 
             trElement.insertCell().innerText = (new Date(orders[index].scheduledDate)).toLocaleString('ru-RU')
             trElement.insertCell().innerText = (new Date(orders[index].deadlineDate)).toLocaleString('ru-RU')
-            trElement.insertCell().innerHTML = CommonUtils.getStatusInfo(orders[index].status)
-            trElement.insertCell().innerText = (new Date(orders[index].completeDate)).toLocaleString('ru-RU')
+
+            const statusInfo = CommonUtils.getStatusInfo(orders[index].status)
+            trElement.insertCell().innerHTML = '<span class="badge badge-' + statusInfo.color + '">' + statusInfo.name + '</span>'
+
+            trElement.insertCell().innerText = orders[index].completeDate ? (new Date(orders[index].completeDate)).toLocaleString('ru-RU') : ''
             trElement.insertCell().innerHTML = '<div class ="orders-tools">' + `<a href='/orders/view?id=${orders[index].id} ' class='fas fa-eye'></a >` + `<a href='/orders/edit?id=${orders[index].id}' class='fas fa-edit'></a >` + `<a href='/orders/delete?id=${orders[index].id}' class='fas fa-trash'></a >` + '</div>'
             recordsElement.appendChild(trElement)
         }

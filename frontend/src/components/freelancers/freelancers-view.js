@@ -5,7 +5,6 @@ import { HttpUtils } from '../../utils/http-utils';
 export class FreelancersView {
     constructor(openNewRoute) {
         this.openNewRoute = openNewRoute
-        this.getFreelancer().then()
         const urlParams = new URLSearchParams(window.location.search);
         const id = urlParams.get('id');
         if (!id) {
