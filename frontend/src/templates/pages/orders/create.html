@@ -1,14 +1,14 @@
-<div class="freelancer-edit">
+<div class="order-create">
   <section class="content-header">
     <div class="container-fluid">
       <div class="row mb-2">
         <div class="col-sm-6">
-          <h1>Создать нового фриланера</h1>
+          <h1>Создать новый заказ</h1>
         </div>
         <div class="col-sm-6">
           <ol class="breadcrumb float-sm-right">
             <li class="breadcrumb-item"><a href="/">Главная</a></li>
-            <li class="breadcrumb-item"><a href="/freelancers">Фрилансеры</a></li>
+            <li class="breadcrumb-item"><a href="/orders">Заказы</a></li>
             <li class="breadcrumb-item active">Создание</li>
           </ol>
         </div>
@@ -19,97 +19,101 @@
   <section class="content container-fluid">
     <div class="card-primary">
       <div class="card-header">
-        <h3 class="card-title">Данные фрилансера</h3>
+        <h3 class="card-title">Создание нового заказа</h3>
       </div>
       <div class="card-body">
         <div class="form-group row">
           <div class="col-sm-3">
-            <label for="nameInput" class="col-form-label">Имя</label>
+            <label for="amountInput" class="col-form-label">Сумма</label>
           </div>
           <div class="col-sm-9">
-            <input type="text" class="form-control" id="nameInput" placeholder="Имя" />
-            <span id="nameInput-error" class="error invalid-feedback">Пожалуйста заполните имя</span>
+            <input type="text" class="form-control" id="amountInput" placeholder="Сумма" />
+            <span id="amountInput-error" class="error invalid-feedback">Пожалуйста заполните сумму</span>
           </div>
         </div>
+
         <div class="form-group row">
           <div class="col-sm-3">
-            <label for="lastNameInput" class="col-form-label">Фамилия</label>
+            <label for="descriptionInput" class="col-form-label">Описание</label>
           </div>
           <div class="col-sm-9">
-            <input type="text" class="form-control" id="lastNameInput" placeholder="Фамилия" />
-            <span id="lastNameInput-error" class="error invalid-feedback">Пожалуйста заполните фамилию</span>
+            <textarea class="form-control" id="descriptionInput" placeholder="Описание"></textarea>
+            <span id="descriptionInput-error" class="error invalid-feedback">Пожалуйста заполните описание</span>
           </div>
         </div>
+
         <div class="form-group row">
           <div class="col-sm-3">
-            <label for="emailInput" class="col-form-label">E-mail</label>
+            <label for="statusSelect" class="col-form-label">Статус</label>
           </div>
           <div class="col-sm-9">
-            <input type="email" class="form-control" id="emailInput" placeholder="E-mail" />
-            <span id="emailInput-error" class="error invalid-feedback">Введите корректный E-mail</span>
-          </div>
-        </div>
-        <div class="form-group row">
-          <div class="col-sm-3">
-            <label for="educationInput" class="col-form-label">Образование</label>
-          </div>
-          <div class="col-sm-9">
-            <input type="text" class="form-control" id="educationInput" placeholder="Образование" />
-            <span id="educationInput-error" class="error invalid-feedback">Пожалуйста заполните образование</span>
-          </div>
-        </div>
-        <div class="form-group row">
-          <div class="col-sm-3">
-            <label for="locationInput" class="col-form-label">Местронахождение</label>
-          </div>
-          <div class="col-sm-9">
-            <input type="text" class="form-control" id="locationInput" placeholder="Местронахождение" />
-            <span id="locationInput-error" class="error invalid-feedback">Пожалуйста заполните местронахождение</span>
-          </div>
-        </div>
-        <div class="form-group row">
-          <div class="col-sm-3">
-            <label for="skillsInput" class="col-form-label">Навыки</label>
-          </div>
-          <div class="col-sm-9">
-            <input type="text" class="form-control" id="skillsInput" placeholder="Навыки" />
-            <span id="skillsInput-error" class="error invalid-feedback">Пожалуйста заполните навыки</span>
-          </div>
-        </div>
-        <div class="form-group row">
-          <div class="col-sm-3">
-            <label for="infoInput" class="col-form-label">Информация</label>
-          </div>
-          <div class="col-sm-9">
-            <textarea class="form-control" id="infoInput" placeholder="Информация"></textarea>
-            <span id="infoInput-error" class="error invalid-feedback">Пожалуйста заполните информацию</span>
-          </div>
-        </div>
-        <div class="form-group row">
-          <div class="col-sm-3">
-            <label for="levelSelect" class="col-form-label">Уровень</label>
-          </div>
-          <div class="col-sm-9">
-            <select type="text" class="form-control" id="levelSelect">
-              <option value="junior" selected>Junior</option>
-              <option value="middle">Middle</option>
-              <option value="senior">Senior</option>
+            <select type="text" class="form-control" id="statusSelect">
+              <option value="new" selected>Новый</option>
+              <option value="confirmed">Подтверждён</option>
+              <option value="success">Выполнен</option>
+              <option value="canceled">Отменён</option>
             </select>
           </div>
         </div>
+
         <div class="form-group row">
           <div class="col-sm-3">
-            <label for="avatarInput" class="col-form-label">Новый аватар</label>
+            <label for="freelancerSelect" class="col-form-label">Исполнитель</label>
           </div>
           <div class="col-sm-9">
-            <div class="custom-file">
-              <input type="file" class="custom-file-input" id="avatarInput" />
-              <label class="custom-file-label" for="avatarInput">Выберите файл</label>
+            <select type="text" class="form-control" id="freelancerSelect"></select>
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-sm-4">
+            <div class="card bg-gradient-info" id="scheduled-card">
+              <div class="card-header border-0">
+                <h3 class="card-title">
+                  <i class="far fa-calendar-alt"></i>
+                  Запланированная дата выполнения
+                </h3>
+              </div>
+
+              <div class="card-body pt-0">
+                <div id="calendar-scheduled" style="width: 100%"></div>
+              </div>
             </div>
+            <span id="scheduled-card-error" class="error text-center invalid-feedback">Пожалуйста выберите дату</span>
+          </div>
+
+          <div class="col-sm-4">
+            <div class="card bg-gradient-success" id="complete-card">
+              <div class="card-header border-0">
+                <h3 class="card-title">
+                  <i class="far fa-calendar-alt"></i>
+                  Дата исполнения (необязательно)
+                </h3>
+              </div>
+
+              <div class="card-body pt-0">
+                <div id="calendar-complete" style="width: 100%"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="col-sm-4">
+            <div class="card bg-gradient-warning" id="deadline-card">
+              <div class="card-header border-0">
+                <h3 class="card-title">
+                  <i class="far fa-calendar-alt"></i>
+                  Дата дедлайна
+                </h3>
+              </div>
+              <div class="card-body pt-0">
+                <div id="calendar-deadline" style="width: 100%"></div>
+              </div>
+            </div>
+            <span id="deadline-card-error" class="error text-center invalid-feedback">Пожалуйста выберите дату</span>
           </div>
         </div>
         <div class="form-group row">
-          <div class="offset-sm-3 col-sm-9">
+          <div class="w-100 text-center">
             <button type="button" class="btn btn-danger" id="saveButton">Создать</button>
           </div>
         </div>

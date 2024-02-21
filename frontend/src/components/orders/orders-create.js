@@ -1,53 +1,97 @@
-import { FileUtils } from '../../utils/file-utils';
-import { HttpUtils } from '../../utils/http-utils';
+import { HttpUtils } from '../../utils/http-utils'
 
-export class FreelancersCreate {
+export class OrdersCreate {
     constructor(openNewRoute) {
-        bsCustomFileInput.init();
         this.openNewRoute = openNewRoute
-        document.getElementById('saveButton').addEventListener('click', this.saveFrelancer.bind(this))
-        this.nameInputElement = document.getElementById('nameInput')
-        this.lastNameInputElement = document.getElementById('lastNameInput')
-        this.emailInputElement = document.getElementById('emailInput')
-        this.educationInputElement = document.getElementById('educationInput')
-        this.locationInputElement = document.getElementById('locationInput')
-        this.skillsInputElement = document.getElementById('skillsInput')
-        this.infoInputElement = document.getElementById('infoInput')
-        this.levelSelectElement = document.getElementById('levelSelect')
-        this.avatarInputElement = document.getElementById('avatarInput')
-    }
-    async saveFrelancer(e) {
-        e.preventDefault()
+        const calendarScheduled = $('#calendar-scheduled')
+        const calendarComplete = $('#calendar-complete')
+        const calendarDeadline = $('#calendar-deadline')
+        this.scheduledDate = null
+        this.completeDate = null
+        this.deadlinedDate = null
 
-        if (this.validateForm()) {
-            const createdData = {
-                name: this.nameInputElement.value,
-                lastName: this.lastNameInputElement.value,
-                email: this.emailInputElement.value,
-                level: this.levelSelectElement.value,
-                education: this.educationInputElement.value,
-                location: this.locationInputElement.value,
-                skills: this.skillsInputElement.value,
-                info: this.infoInputElement.value
+        calendarScheduled.datetimepicker({
+            // format: 'L',
+            locale: 'ru',
+            inline: true,
+            icons: {
+                time: 'far fa-clock'
+            },
+            useCurrent: false,
+            buttons: {
+                showClear: true
             }
-            if (this.avatarInputElement.files && this.avatarInputElement.files.length > 0) {
-                createdData.avatarBase64 = await FileUtils.convertFileToBase64(this.avatarInputElement.files[0])
+
+        })
+        calendarComplete.datetimepicker({
+            locale: 'ru',
+            inline: true,
+            icons: {
+                time: 'far fa-clock'
+            },
+            useCurrent: false,
+            buttons: {
+                showClear: true
             }
-            const result = await HttpUtils.request('/freelancers', 'POST', true, createdData)
-            if (result.redirect) {
-                return this.openNewRoute(result.redirect)
+        })
+        calendarDeadline.datetimepicker({
+            locale: 'ru',
+            inline: true,
+            icons: {
+                time: 'far fa-clock'
+            },
+            useCurrent: false,
+            buttons: {
+                showClear: true
             }
-            if (result.error || !result.response || (result.response && result.response.error)) {
-                alert('возникла ошибка при создании фрилансера. обратитесь в техподдержку')
-                return
-            }
-            return this.openNewRoute('/freelancers/view?id=' + result.response.id)
+        })
+        calendarScheduled.on("change.datetimepicker", (e) => {
+            this.scheduledDate = e.date
+        })
+        calendarComplete.on("change.datetimepicker", (e) => {
+            this.completeDate = e.date
+        })
+        calendarDeadline.on("change.datetimepicker", (e) => {
+            this.deadlinedDate = e.date
+        })
+
+        this.getFreelancers().then()
+
+        this.freelancerSelectElement = document.getElementById('freelancerSelect')
+        document.getElementById('saveButton').addEventListener('click', this.saveOrder.bind(this))
+        this.amountInputElement = document.getElementById('amountInput')
+        this.descriptionInputElement = document.getElementById('descriptionInput')
+        this.scheduledCardElement = document.getElementById('scheduled-card')
+        this.completeCardElement = document.getElementById('complete-card')
+        this.deadlineCardElement = document.getElementById('deadline-card')
+        this.statusSelectElement = document.getElementById('statusSelect')
+
+    }
+    async getFreelancers() {
+        const result = await HttpUtils.request('/freelancers')
+        if (result.redirect) {
+            return this.openNewRoute(result.redirect)
         }
+        if (result.error || !result.response || (result.response && result.response.error || !result.response.freelancers)) {
+            alert('возникла ошибка при запросе фрилансеров')
+        }
+
+        const freelancers = result.response.freelancers
+        for (let index = 0; index < freelancers.length; index++) {
+            const option = document.createElement('option')
+            option.value = freelancers[index].id
+            option.innerText = `${freelancers[index].name} ${freelancers[index].lastName}`
+            this.freelancerSelectElement.appendChild(option)
+        }
+
+        $(this.freelancerSelectElement).select2({
+            theme: 'bootstrap4'
+        })
     }
 
     validateForm() {
         let isValid = true
-        let textInputArray = [this.nameInputElement, this.lastNameInputElement, this.educationInputElement, this.locationInputElement, this.skillsInputElement, this.infoInputElement]
+        let textInputArray = [this.amountInputElement, this.descriptionInputElement]
         for (let index = 0; index < textInputArray.length; index++) {
             if (textInputArray[index].value) {
                 textInputArray[index].classList.remove('is-invalid');
@@ -58,14 +102,58 @@ export class FreelancersCreate {
             }
         }
 
-        if (this.emailInputElement.value && this.emailInputElement.value.match(/^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/)) {
-            this.emailInputElement.classList.remove('is-invalid');
+
+        if (this.scheduledDate) {
+            this.scheduledCardElement.classList.remove('is-invalid');
         }
         else {
-            this.emailInputElement.classList.add('is-invalid');
+            this.scheduledCardElement.classList.add('is-invalid');
+            isValid = false
+        }
+
+        if (parseInt(this.amountInputElement.value)) {
+            this.amountInputElement.classList.remove('is-invalid');
+        }
+        else {
+            this.amountInputElement.classList.add('is-invalid');
+            isValid = false
+        }
+
+        if (this.deadlinedDate) {
+            this.deadlineCardElement.classList.remove('is-invalid');
+        }
+        else {
+            this.deadlineCardElement.classList.add('is-invalid');
             isValid = false
         }
         return isValid
+    }
 
+    async saveOrder(e) {
+        e.preventDefault()
+        if (this.validateForm()) {
+
+            const createdData = {
+                description: this.descriptionInputElement.value,
+                deadlineDate: this.deadlinedDate._d,
+                scheduledDate: this.scheduledDate._d,
+                freelancer: this.freelancerSelectElement.value,
+                status: this.statusSelectElement.value,
+                amount: parseInt(this.amountInputElement.value)
+            }
+            if (this.completeDate) {
+                createdData.completeDate = this.completeDate._d
+            }
+
+            const result = await HttpUtils.request('/orders', 'POST', true, createdData)
+            if (result.redirect) {
+                return this.openNewRoute(result.redirect)
+            }
+            if (result.error || !result.response || (result.response && result.response.error)) {
+                alert('возникла ошибка при создании заказа. обратитесь в техподдержку')
+                return
+            }
+            return this.openNewRoute('/orders/view?id=' + result.response.id)
+        }
     }
 }
