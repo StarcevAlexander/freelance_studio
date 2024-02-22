@@ -13,9 +13,11 @@ import { OrdersView } from './components/orders/orders-view'
 import { OrdersCreate } from './components/orders/orders-create'
 import { OrdersEdit } from './components/orders/orders-edit'
 import { OrdersDelete } from './components/orders/orders-delete'
+import { AuthUtils } from './utils/auth-utils'
 
 export class Router {
     constructor() {
+        this.userName = null
         this.titlePageElement = document.getElementById('title')
         this.adminLteStyleElement = document.getElementById('adminlte_style')
         this.initEvents()
@@ -267,6 +269,18 @@ export class Router {
                     this.contentPageElement = document.getElementById('content-layout')
                     document.body.classList.add('sidebar-mini')
                     document.body.classList.add('layout-fixed')
+
+                    this.profileElement = document.getElementById('profile-user')
+                    if (!this.userName) {
+                        let userInfo = AuthUtils.getAuthInfo(AuthUtils.userInfoTokenKey)
+                        if (userInfo) {
+                            userInfo = JSON.parse(userInfo)
+                            if (userInfo.name) {
+                                this.userName = userInfo.name
+                            }
+                        }
+                    }
+                    this.profileElement.innerText = this.userName
                     this.activatedMenuItem(newRoute)
                 }
                 else {
