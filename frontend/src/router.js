@@ -25,7 +25,14 @@ export class Router {
                 title: 'Дашборд',
                 filePathTemplate: '/templates/pages/dashboard.html',
                 useLayout: '/templates/layout.html',
-                load: () => { new Dashboard() }
+                load: () => { new Dashboard() },
+                styles: ['fullcalendar.css'],
+                scripts: [
+                    'moment.min.js',
+                    'moment-ru-locale.js',
+                    'fullcalendar.js',
+                    'fullcalendar-ru.js',
+                ]
             },
             {
                 route: '/freelancers/view',
@@ -142,7 +149,7 @@ export class Router {
                 ],
                 scripts: [
                     'moment.min.js',
-                    'moment-to-locale.js',
+                    'moment-ru-locale.js',
                     'tempusdominus-bootstrap-4.min.js',
                     'select2.full.min.js'
                 ]
@@ -260,6 +267,7 @@ export class Router {
                     this.contentPageElement = document.getElementById('content-layout')
                     document.body.classList.add('sidebar-mini')
                     document.body.classList.add('layout-fixed')
+                    this.activatedMenuItem(newRoute)
                 }
                 else {
                     document.body.classList.remove('sidebar-mini')
@@ -270,11 +278,21 @@ export class Router {
             if (newRoute.load && typeof newRoute.load === 'function') {
                 newRoute.load()
             }
-        }
-        else {
+        } else {
             console.log('no route found');
             history.pushState({}, '', '/404')
-            await this.activateRoute()
+            await this.activateRoute(null)
         }
+    }
+
+    activatedMenuItem(route) {
+        document.querySelectorAll('.sidebar .nav-link').forEach(item => {
+            const href = item.getAttribute('href')
+            if ((route.route.includes(href) && href !== '/') || route.route === '/' && href === '/') {
+                item.classList.add('active')
+            }
+            else
+                item.classList.remove('active')
+        })
     }
 }

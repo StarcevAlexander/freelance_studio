@@ -3,8 +3,14 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 const CopyPlugin = require("copy-webpack-plugin");
 
 module.exports = {
+    performance: {
+        hints: false,
+        maxEntrypointSize: 512000,
+        maxAssetSize: 512000
+    }, //size limit
     entry: './src/app.js',
     mode: 'development',
+    // mode: 'production',
     output: {
         filename: 'app.js',
         path: path.resolve(__dirname, 'dist'),
@@ -27,7 +33,7 @@ module.exports = {
                     "css-loader",
                     "sass-loader",
                 ],
-            },
+            }
         ],
     },
     plugins: [
@@ -51,12 +57,15 @@ module.exports = {
                 { from: "./node_modules/admin-lte/plugins/datatables-bs4/js/dataTables.bootstrap4.min.js", to: "js" },
                 { from: "./node_modules/admin-lte/plugins/bs-custom-file-input/bs-custom-file-input.min.js", to: "js" },
                 { from: "./node_modules/admin-lte/plugins/moment/moment.min.js", to: "js" },
-                { from: "./node_modules/admin-lte/plugins/moment/locale/ru.js", to: "js/moment-to-locale.js" },
+                { from: "./node_modules/admin-lte/plugins/moment/locale/ru.js", to: "js/moment-ru-locale.js" },
                 { from: "./node_modules/admin-lte/plugins/tempusdominus-bootstrap-4/js/tempusdominus-bootstrap-4.min.js", to: "js" },
                 { from: "./node_modules/admin-lte/plugins/tempusdominus-bootstrap-4/css/tempusdominus-bootstrap-4.min.css", to: "css" },
                 { from: "./node_modules/admin-lte/plugins/select2/js/select2.full.min.js", to: "js" },
                 { from: "./node_modules/admin-lte/plugins/select2/css/select2.min.css", to: "css" },
                 { from: "./node_modules/admin-lte/plugins/select2-bootstrap4-theme/select2-bootstrap4.min.css", to: "css" },
+                { from: "./node_modules/admin-lte/plugins/fullcalendar/main.js", to: "js/fullcalendar.js" },
+                { from: "./node_modules/admin-lte/plugins/fullcalendar/main.css", to: "css/fullcalendar.css" },
+                { from: "./node_modules/admin-lte/plugins/fullcalendar/locales/ru.js", to: "js/fullcalendar-ru.js" },
             ],
         }),
     ]
