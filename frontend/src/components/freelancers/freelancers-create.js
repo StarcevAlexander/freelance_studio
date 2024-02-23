@@ -7,19 +7,12 @@ export class FreelancersCreate {
     constructor(openNewRoute) {
         bsCustomFileInput.init();
         this.openNewRoute = openNewRoute
-        if (AuthUtils.getAuthInfo(AuthUtils.accessTokenKey)) {
+        if (!AuthUtils.getAuthInfo(AuthUtils.accessTokenKey)) {
             return this.openNewRoute('/')
         }
         document.getElementById('saveButton').addEventListener('click', this.saveFrelancer.bind(this))
-        this.nameInputElement = document.getElementById('nameInput')
-        this.lastNameInputElement = document.getElementById('lastNameInput')
-        this.emailInputElement = document.getElementById('emailInput')
-        this.educationInputElement = document.getElementById('educationInput')
-        this.locationInputElement = document.getElementById('locationInput')
-        this.skillsInputElement = document.getElementById('skillsInput')
-        this.infoInputElement = document.getElementById('infoInput')
-        this.levelSelectElement = document.getElementById('levelSelect')
-        this.avatarInputElement = document.getElementById('avatarInput')
+
+        this.findElements()
 
         this.validations = [
             { element: this.nameInputElement },
@@ -31,6 +24,19 @@ export class FreelancersCreate {
             { element: this.emailInputElement, options: { pattern: /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/ } }
         ]
     }
+
+    findElements() {
+        this.nameInputElement = document.getElementById('nameInput')
+        this.lastNameInputElement = document.getElementById('lastNameInput')
+        this.emailInputElement = document.getElementById('emailInput')
+        this.educationInputElement = document.getElementById('educationInput')
+        this.locationInputElement = document.getElementById('locationInput')
+        this.skillsInputElement = document.getElementById('skillsInput')
+        this.infoInputElement = document.getElementById('infoInput')
+        this.levelSelectElement = document.getElementById('levelSelect')
+        this.avatarInputElement = document.getElementById('avatarInput')
+    }
+
     async saveFrelancer(e) {
         e.preventDefault()
         if (ValidationUtils.validateForm(this.validations)) {

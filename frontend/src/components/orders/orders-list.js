@@ -5,7 +5,7 @@ import { HttpUtils } from '../../utils/http-utils'
 export class OrdersList {
     constructor(openNewRoute) {
         this.openNewRoute = openNewRoute
-        if (AuthUtils.getAuthInfo(AuthUtils.accessTokenKey)) {
+        if (!AuthUtils.getAuthInfo(AuthUtils.accessTokenKey)) {
             return this.openNewRoute('/')
         }
         this.getOrderers().then()

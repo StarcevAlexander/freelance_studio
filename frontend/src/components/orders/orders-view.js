@@ -2,16 +2,16 @@ import config from '../../config/config';
 import { AuthUtils } from '../../utils/auth-utils';
 import { CommonUtils } from '../../utils/common-utils';
 import { HttpUtils } from '../../utils/http-utils';
+import { UrlUtils } from '../../utils/url-utils';
 
 export class OrdersView {
     constructor(openNewRoute) {
         this.openNewRoute = openNewRoute
-        const urlParams = new URLSearchParams(window.location.search);
-        const id = urlParams.get('id');
+        const id = UrlUtils.getUrlParam('id')
         if (!id) {
             return this.openNewRoute('/')
         }
-        if (AuthUtils.getAuthInfo(AuthUtils.accessTokenKey)) {
+        if (!AuthUtils.getAuthInfo(AuthUtils.accessTokenKey)) {
             return this.openNewRoute('/')
         }
         this.getOrder(id).then()

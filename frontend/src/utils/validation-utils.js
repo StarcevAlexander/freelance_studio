@@ -10,29 +10,27 @@ export class ValidationUtils {
     }
 
     static validateField(element, options) {
-        let condition = element.value
+        let condition = element.value;
+
         if (options) {
             if (options.hasOwnProperty('pattern')) {
-                condition = element.value && element.value.match(options.pattern)
-            }
-            else if (options.hasOwnProperty('compareTo')) {
-                condition = element.value && element.value === options.compareTo
-            }
-            else if (options.hasOwnProperty('checkProperty')) {
-                condition = options.checkProperty
-            }
-            else if (options.hasOwnProperty('checked')) {
-                condition = options.checked
+                condition = element.value && element.value.match(options.pattern);
+            } else if (options.hasOwnProperty('compareTo')) {
+                condition = element.value && element.value === options.compareTo;
+            } else if (options.hasOwnProperty('checkProperty')) {
+                condition = options.checkProperty !== null;
+            } else if (options.hasOwnProperty('checked')) {
+                condition = options.checked;
             }
         }
 
         if (condition) {
             element.classList.remove('is-invalid');
-            return true
-        }
-        else {
+            return true;
+        } else {
             element.classList.add('is-invalid');
-            return false
+            return false;
         }
     }
+
 }

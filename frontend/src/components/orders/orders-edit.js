@@ -3,39 +3,43 @@ import { AuthUtils } from '../../utils/auth-utils';
 import { CommonUtils } from '../../utils/common-utils';
 import { FileUtils } from '../../utils/file-utils';
 import { HttpUtils } from '../../utils/http-utils';
+import { UrlUtils } from '../../utils/url-utils';
 import { ValidationUtils } from '../../utils/validation-utils';
 
 export class OrdersEdit {
     constructor(openNewRoute) {
         this.openNewRoute = openNewRoute
-        if (AuthUtils.getAuthInfo(AuthUtils.accessTokenKey)) {
+        if (!AuthUtils.getAuthInfo(AuthUtils.accessTokenKey)) {
             return this.openNewRoute('/')
         }
-        const urlParams = new URLSearchParams(window.location.search);
-        const id = urlParams.get('id');
+        const id = UrlUtils.getUrlParam('id')
         if (!id) {
             return this.openNewRoute('/')
         }
         this.init(id).then()
         document.getElementById('updateButton').addEventListener('click', this.updateOrder.bind(this))
-        this.amountInputElement = document.getElementById('amountInput')
-        this.freelancerSelectElement = document.getElementById('freelancerSelect')
-        this.descriptionInputElement = document.getElementById('descriptionInput')
-
         this.scheduledDate = null
         this.completeDate = null
         this.deadlineDate = null
-        this.scheduledCardElement = document.getElementById('scheduled-card')
-        this.completeCardElement = document.getElementById('complete-card')
-        this.deadlineCardElement = document.getElementById('deadline-card')
 
-        this.statusSelectElement = document.getElementById('statusSelect')
+        this.findElements()
+
         this.validations = [
             { element: this.amountInputElement },
             { element: this.descriptionInputElement },
-            { element: this.scheduledCardElement, options: { checkProperty: this.scheduledDate } },
-            { element: this.deadlineCardElement, options: { checkProperty: this.deadlinedDate } },
+            { element: this.scheduledCardElement, options: { checkProperty: this.scheduledCardElement } },
+            { element: this.deadlineCardElement, options: { checkProperty: this.deadlineCardElement } },
         ]
+    }
+
+    findElements() {
+        this.freelancerSelectElement = document.getElementById('freelancerSelect')
+        this.amountInputElement = document.getElementById('amountInput')
+        this.descriptionInputElement = document.getElementById('descriptionInput')
+        this.statusSelectElement = document.getElementById('statusSelect')
+        this.scheduledCardElement = document.getElementById('scheduled-card')
+        this.completeCardElement = document.getElementById('complete-card')
+        this.deadlineCardElement = document.getElementById('deadline-card')
     }
 
     async init(id) {

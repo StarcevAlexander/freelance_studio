@@ -1,18 +1,16 @@
 import config from '../../config/config';
 import { CommonUtils } from '../../utils/common-utils';
 import { HttpUtils } from '../../utils/http-utils';
+import { UrlUtils } from '../../utils/url-utils';
 
 export class FreelancersView {
     constructor(openNewRoute) {
         this.openNewRoute = openNewRoute
-        const urlParams = new URLSearchParams(window.location.search);
-        const id = urlParams.get('id');
+        const id = UrlUtils.getUrlParam('id')
         if (!id) {
             return this.openNewRoute('/')
         }
-        if (id) {
-            this.getFreelancer(id).then()
-        }
+        this.getFreelancer(id).then()
         document.getElementById('edit-link').href = '/freelancers/edit?id=' + id
         document.getElementById('delete-link').href = '/freelancers/delete?id=' + id
     }

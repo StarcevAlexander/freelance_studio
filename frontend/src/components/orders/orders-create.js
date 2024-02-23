@@ -5,7 +5,7 @@ import { ValidationUtils } from '../../utils/validation-utils'
 export class OrdersCreate {
     constructor(openNewRoute) {
         this.openNewRoute = openNewRoute
-        if (AuthUtils.getAuthInfo(AuthUtils.accessTokenKey)) {
+        if (!AuthUtils.getAuthInfo(AuthUtils.accessTokenKey)) {
             return this.openNewRoute('/')
         }
         const calendarScheduled = $('#calendar-scheduled')
@@ -52,32 +52,40 @@ export class OrdersCreate {
         })
         calendarScheduled.on("change.datetimepicker", (e) => {
             this.scheduledDate = e.date
+            this.validations[2].options.checkProperty = true
         })
         calendarComplete.on("change.datetimepicker", (e) => {
             this.completeDate = e.date
         })
         calendarDeadline.on("change.datetimepicker", (e) => {
             this.deadlinedDate = e.date
+            this.validations[3].options.checkProperty = true
         })
 
         this.getFreelancers().then()
 
         this.freelancerSelectElement = document.getElementById('freelancerSelect')
         document.getElementById('saveButton').addEventListener('click', this.saveOrder.bind(this))
-        this.amountInputElement = document.getElementById('amountInput')
-        this.descriptionInputElement = document.getElementById('descriptionInput')
-        this.scheduledCardElement = document.getElementById('scheduled-card')
-        this.completeCardElement = document.getElementById('complete-card')
-        this.deadlineCardElement = document.getElementById('deadline-card')
-        this.statusSelectElement = document.getElementById('statusSelect')
+
+        this.findElements()
+
         this.validations = [
             { element: this.amountInputElement },
             { element: this.descriptionInputElement },
             { element: this.scheduledCardElement, options: { checkProperty: this.scheduledDate } },
             { element: this.deadlineCardElement, options: { checkProperty: this.deadlinedDate } },
         ]
-
     }
+
+    findElements() {
+        this.amountInputElement = document.getElementById('amountInput')
+        this.descriptionInputElement = document.getElementById('descriptionInput')
+        this.scheduledCardElement = document.getElementById('scheduled-card')
+        this.completeCardElement = document.getElementById('complete-card')
+        this.deadlineCardElement = document.getElementById('deadline-card')
+        this.statusSelectElement = document.getElementById('statusSelect')
+    }
+
     async getFreelancers() {
         const result = await HttpUtils.request('/freelancers')
         if (result.redirect) {
@@ -102,6 +110,11 @@ export class OrdersCreate {
 
     async saveOrder(e) {
         e.preventDefault()
+
+        console.log(this.scheduledDate);
+
+        console.log(this.validations[2].options);
+
         if (ValidationUtils.validateForm(this.validations)) {
             const createdData = {
                 description: this.descriptionInputElement.value,

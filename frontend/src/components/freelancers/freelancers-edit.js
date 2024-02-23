@@ -3,31 +3,22 @@ import { AuthUtils } from '../../utils/auth-utils';
 import { CommonUtils } from '../../utils/common-utils';
 import { FileUtils } from '../../utils/file-utils';
 import { HttpUtils } from '../../utils/http-utils';
+import { UrlUtils } from '../../utils/url-utils';
 import { ValidationUtils } from '../../utils/validation-utils';
 
 export class FreelancersEdit {
     constructor(openNewRoute) {
         this.openNewRoute = openNewRoute
-        const urlParams = new URLSearchParams(window.location.search);
-        const id = urlParams.get('id');
+        const id = UrlUtils.getUrlParam('id')
         if (!id) {
             return this.openNewRoute('/')
         }
-        if (AuthUtils.getAuthInfo(AuthUtils.accessTokenKey)) {
+        if (!AuthUtils.getAuthInfo(AuthUtils.accessTokenKey)) {
             return this.openNewRoute('/')
         }
         this.getFreelancer(id).then()
 
-        this.avatarInputElement = document.getElementById('avatarInput')
-        this.nameInputElement = document.getElementById('nameInput')
-        this.lastNameInputElement = document.getElementById('lastNameInput')
-        this.emailInputElement = document.getElementById('emailInput')
-        this.educationInputElement = document.getElementById('educationInput')
-        this.locationInputElement = document.getElementById('locationInput')
-        this.skillsInputElement = document.getElementById('skillsInput')
-        this.infoInputElement = document.getElementById('infoInput')
-        this.levelSelectElement = document.getElementById('levelSelect')
-        this.openNewRoute = openNewRoute
+        this.findElements()
 
         this.validations = [
             { element: this.nameInputElement },
@@ -38,9 +29,21 @@ export class FreelancersEdit {
             { element: this.infoInputElement },
             { element: this.emailInputElement, options: { pattern: /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/ } }
         ]
-
         document.getElementById('updateButton').addEventListener('click', this.updateFrelancer.bind(this))
     }
+
+    findElements() {
+        this.avatarInputElement = document.getElementById('avatarInput')
+        this.nameInputElement = document.getElementById('nameInput')
+        this.lastNameInputElement = document.getElementById('lastNameInput')
+        this.emailInputElement = document.getElementById('emailInput')
+        this.educationInputElement = document.getElementById('educationInput')
+        this.locationInputElement = document.getElementById('locationInput')
+        this.skillsInputElement = document.getElementById('skillsInput')
+        this.infoInputElement = document.getElementById('infoInput')
+        this.levelSelectElement = document.getElementById('levelSelect')
+    }
+
     async getFreelancer(id) {
         const result = await HttpUtils.request('/freelancers/' + id)
         if (result.redirect) {
