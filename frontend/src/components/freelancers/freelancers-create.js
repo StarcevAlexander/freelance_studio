@@ -1,10 +1,15 @@
+import { AuthUtils } from '../../utils/auth-utils';
 import { FileUtils } from '../../utils/file-utils';
 import { HttpUtils } from '../../utils/http-utils';
+import { ValidationUtils } from '../../utils/validation-utils';
 
 export class FreelancersCreate {
     constructor(openNewRoute) {
         bsCustomFileInput.init();
         this.openNewRoute = openNewRoute
+        if (AuthUtils.getAuthInfo(AuthUtils.accessTokenKey)) {
+            return this.openNewRoute('/')
+        }
         document.getElementById('saveButton').addEventListener('click', this.saveFrelancer.bind(this))
         this.nameInputElement = document.getElementById('nameInput')
         this.lastNameInputElement = document.getElementById('lastNameInput')
@@ -15,11 +20,20 @@ export class FreelancersCreate {
         this.infoInputElement = document.getElementById('infoInput')
         this.levelSelectElement = document.getElementById('levelSelect')
         this.avatarInputElement = document.getElementById('avatarInput')
+
+        this.validations = [
+            { element: this.nameInputElement },
+            { element: this.lastNameInputElement },
+            { element: this.educationInputElement },
+            { element: this.locationInputElement },
+            { element: this.skillsInputElement },
+            { element: this.infoInputElement },
+            { element: this.emailInputElement, options: { pattern: /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/ } }
+        ]
     }
     async saveFrelancer(e) {
         e.preventDefault()
-
-        if (this.validateForm()) {
+        if (ValidationUtils.validateForm(this.validations)) {
             const createdData = {
                 name: this.nameInputElement.value,
                 lastName: this.lastNameInputElement.value,
@@ -43,29 +57,5 @@ export class FreelancersCreate {
             }
             return this.openNewRoute('/freelancers/view?id=' + result.response.id)
         }
-    }
-
-    validateForm() {
-        let isValid = true
-        let textInputArray = [this.nameInputElement, this.lastNameInputElement, this.educationInputElement, this.locationInputElement, this.skillsInputElement, this.infoInputElement]
-        for (let index = 0; index < textInputArray.length; index++) {
-            if (textInputArray[index].value) {
-                textInputArray[index].classList.remove('is-invalid');
-            }
-            else {
-                textInputArray[index].classList.add('is-invalid');
-                isValid = false
-            }
-        }
-
-        if (this.emailInputElement.value && this.emailInputElement.value.match(/^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/)) {
-            this.emailInputElement.classList.remove('is-invalid');
-        }
-        else {
-            this.emailInputElement.classList.add('is-invalid');
-            isValid = false
-        }
-        return isValid
-
     }
 }

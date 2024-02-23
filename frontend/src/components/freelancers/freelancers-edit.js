@@ -1,7 +1,9 @@
 import config from '../../config/config';
+import { AuthUtils } from '../../utils/auth-utils';
 import { CommonUtils } from '../../utils/common-utils';
 import { FileUtils } from '../../utils/file-utils';
 import { HttpUtils } from '../../utils/http-utils';
+import { ValidationUtils } from '../../utils/validation-utils';
 
 export class FreelancersEdit {
     constructor(openNewRoute) {
@@ -9,6 +11,9 @@ export class FreelancersEdit {
         const urlParams = new URLSearchParams(window.location.search);
         const id = urlParams.get('id');
         if (!id) {
+            return this.openNewRoute('/')
+        }
+        if (AuthUtils.getAuthInfo(AuthUtils.accessTokenKey)) {
             return this.openNewRoute('/')
         }
         this.getFreelancer(id).then()
@@ -23,6 +28,17 @@ export class FreelancersEdit {
         this.infoInputElement = document.getElementById('infoInput')
         this.levelSelectElement = document.getElementById('levelSelect')
         this.openNewRoute = openNewRoute
+
+        this.validations = [
+            { element: this.nameInputElement },
+            { element: this.educationInputElement },
+            { element: this.locationInputElement },
+            { element: this.locationInputElement },
+            { element: this.skillsInputElement },
+            { element: this.infoInputElement },
+            { element: this.emailInputElement, options: { pattern: /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/ } }
+        ]
+
         document.getElementById('updateButton').addEventListener('click', this.updateFrelancer.bind(this))
     }
     async getFreelancer(id) {
@@ -62,33 +78,9 @@ export class FreelancersEdit {
         }
     }
 
-    validateForm() {
-        let isValid = true
-        let textInputArray = [this.nameInputElement, this.lastNameInputElement, this.educationInputElement, this.locationInputElement, this.skillsInputElement, this.infoInputElement]
-        for (let index = 0; index < textInputArray.length; index++) {
-            if (textInputArray[index].value) {
-                textInputArray[index].classList.remove('is-invalid');
-            }
-            else {
-                textInputArray[index].classList.add('is-invalid');
-                isValid = false
-            }
-        }
-
-        if (this.emailInputElement.value && this.emailInputElement.value.match(/^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/)) {
-            this.emailInputElement.classList.remove('is-invalid');
-        }
-        else {
-            this.emailInputElement.classList.add('is-invalid');
-            isValid = false
-        }
-        return isValid
-
-    }
-
     async updateFrelancer(e) {
         e.preventDefault()
-        if (this.validateForm()) {
+        if (ValidationUtils.validateForm(this.validations)) {
             const changedData = {}
             if (this.nameInputElement.value !== this.freelancerOriginalData.name) {
                 changedData.name = this.nameInputElement.value

@@ -1,10 +1,14 @@
 import config from '../../config/config';
+import { AuthUtils } from '../../utils/auth-utils';
 import { CommonUtils } from '../../utils/common-utils';
 import { HttpUtils } from '../../utils/http-utils';
 
 export class FreelancersList {
     constructor() {
         this.getFreelancers().then()
+        if (AuthUtils.getAuthInfo(AuthUtils.accessTokenKey)) {
+            return this.openNewRoute('/')
+        }
     }
 
     async getFreelancers() {

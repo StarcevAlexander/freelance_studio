@@ -1,35 +1,41 @@
 import config from '../../config/config';
+import { AuthUtils } from '../../utils/auth-utils';
 import { CommonUtils } from '../../utils/common-utils';
 import { FileUtils } from '../../utils/file-utils';
 import { HttpUtils } from '../../utils/http-utils';
+import { ValidationUtils } from '../../utils/validation-utils';
 
 export class OrdersEdit {
     constructor(openNewRoute) {
         this.openNewRoute = openNewRoute
-
+        if (AuthUtils.getAuthInfo(AuthUtils.accessTokenKey)) {
+            return this.openNewRoute('/')
+        }
         const urlParams = new URLSearchParams(window.location.search);
         const id = urlParams.get('id');
         if (!id) {
             return this.openNewRoute('/')
         }
-
         this.init(id).then()
-
-
-        this.scheduledDate = null
-        this.completeDate = null
-        this.deadlineDate = null
-
-
-
         document.getElementById('updateButton').addEventListener('click', this.updateOrder.bind(this))
         this.amountInputElement = document.getElementById('amountInput')
         this.freelancerSelectElement = document.getElementById('freelancerSelect')
         this.descriptionInputElement = document.getElementById('descriptionInput')
+
+        this.scheduledDate = null
+        this.completeDate = null
+        this.deadlineDate = null
         this.scheduledCardElement = document.getElementById('scheduled-card')
         this.completeCardElement = document.getElementById('complete-card')
         this.deadlineCardElement = document.getElementById('deadline-card')
+
         this.statusSelectElement = document.getElementById('statusSelect')
+        this.validations = [
+            { element: this.amountInputElement },
+            { element: this.descriptionInputElement },
+            { element: this.scheduledCardElement, options: { checkProperty: this.scheduledDate } },
+            { element: this.deadlineCardElement, options: { checkProperty: this.deadlinedDate } },
+        ]
     }
 
     async init(id) {
@@ -148,7 +154,6 @@ export class OrdersEdit {
             }
             else this.scheduledDate = null
         })
-
         calendarComplete.on("change.datetimepicker", (e) => {
             if (e.date) {
                 this.completeDate = e.date
@@ -160,7 +165,6 @@ export class OrdersEdit {
             }
             else this.completeDate = null
         })
-
         calendarDeadline.on("change.datetimepicker", (e) => {
             if (e.date) {
                 this.deadlineDate = e.date
@@ -174,33 +178,9 @@ export class OrdersEdit {
         })
     }
 
-    validateForm() {
-        let isValid = true
-        let textInputArray = [this.amountInputElement, this.descriptionInputElement]
-        for (let index = 0; index < textInputArray.length; index++) {
-            if (textInputArray[index].value) {
-                textInputArray[index].classList.remove('is-invalid');
-            }
-            else {
-                textInputArray[index].classList.add('is-invalid');
-                isValid = false
-            }
-        }
-
-        if (parseInt(this.amountInputElement.value)) {
-            this.amountInputElement.classList.remove('is-invalid');
-        }
-        else {
-            this.amountInputElement.classList.add('is-invalid');
-            isValid = false
-        }
-
-        return isValid
-    }
-
     async updateOrder(e) {
         e.preventDefault()
-        if (this.validateForm()) {
+        if (ValidationUtils.validateForm(this.validations)) {
             const changedData = {}
             if (this.amountInputElement.value != this.orderOriginalData.amount) {
                 changedData.amount = this.amountInputElement.value

@@ -27,7 +27,7 @@ export class Router {
                 title: 'Дашборд',
                 filePathTemplate: '/templates/pages/dashboard.html',
                 useLayout: '/templates/layout.html',
-                load: () => { new Dashboard() },
+                load: () => { new Dashboard(this.openNewRoute.bind(this)) },
                 styles: ['fullcalendar.css'],
                 scripts: [
                     'moment.min.js',
@@ -169,7 +169,7 @@ export class Router {
                 ],
                 scripts: [
                     'moment.min.js',
-                    'moment-to-locale.js',
+                    'moment-ru-locale.js',
                     'tempusdominus-bootstrap-4.min.js',
                     'select2.full.min.js'
                 ]

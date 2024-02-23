@@ -1,5 +1,6 @@
 import { AuthUtils } from '../../utils/auth-utils'
 import { HttpUtils } from '../../utils/http-utils'
+import { ValidationUtils } from '../../utils/validation-utils'
 
 export class SignUp {
     constructor(openNewRoute) {
@@ -16,76 +17,26 @@ export class SignUp {
         this.agreeElement = document.getElementById('agree')
         this.commonErrorElement = document.getElementById('common-error')
         document.getElementById('process-button').addEventListener('click', this.signup.bind(this))
+
+        this.validations = [
+            { element: this.nameElement },
+            { element: this.lastNameElement },
+            { element: this.emailElement, options: { pattern: /^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/ } },
+            { element: this.passwordElement, options: { pattern: /^(?=.*[A-Za-z])(?=.*\d)[A-Za-z\d]{8,}$/ } },
+            { element: this.passwordRepeatElement, options: { compareTo: this.passwordElement.value } },
+            { element: this.agreeElement, options: { checked: true } },
+        ]
     }
-
-    validateForm() {
-        let isValid = true
-
-        if (this.nameElement.value) {
-            this.nameElement.classList.remove('is-invalid');
-        }
-        else {
-            this.nameElement.classList.add('is-invalid');
-            isValid = false
-        }
-
-        if (this.lastNameElement.value) {
-            this.lastNameElement.classList.remove('is-invalid');
-        }
-
-        else {
-            this.lastNameElement.classList.add('is-invalid');
-            isValid = false
-        }
-
-        if (this.emailElement.value && this.emailElement.value.match(/^\w+([-+.']\w+)*@\w+([-.]\w+)*\.\w+([-.]\w+)*$/)) {
-            this.emailElement.classList.remove('is-invalid');
-        }
-        else {
-            this.emailElement.classList.add('is-invalid');
-            isValid = false
-        }
-
-        if (this.passwordElement.value) {
-            this.passwordElement.classList.remove('is-invalid');
-        }
-        else {
-            this.passwordElement.classList.add('is-invalid');
-            isValid = false
-        }
-
-        if (this.passwordRepeatElement.value) {
-            this.passwordRepeatElement.classList.remove('is-invalid');
-        }
-        else {
-            this.passwordRepeatElement.classList.add('is-invalid');
-            isValid = false
-        }
-
-        if (this.passwordElement.value && this.passwordRepeatElement.value && this.passwordElement.value === this.passwordRepeatElement.value) {
-            this.passwordRepeatElement.classList.remove('is-invalid');
-            this.passwordElement.classList.remove('is-invalid');
-        }
-        else {
-            this.passwordElement.classList.add('is-invalid');
-            this.passwordRepeatElement.classList.add('is-invalid');
-            isValid = false
-        }
-
-        if (this.agreeElement.checked) {
-            this.agreeElement.parentElement.style.border = "";
-        }
-        else {
-            this.agreeElement.parentElement.style.border = "1px solid red";
-            isValid = false
-        }
-        return isValid
-    }
-
 
     async signup() {
         this.commonErrorElement.style.display = 'none'
-        if (this.validateForm()) {
+        for (let index = 0; index < this.validations.length; index++) {
+            if (this.validations[index].element === this.passwordRepeatElement) {
+                this.validations[index].options.compareTo = this.passwordElement.value
+            }
+
+        }
+        if (ValidationUtils.validateForm(this.validations)) {
             const result = await HttpUtils.request('/signup', 'POST', false, {
                 name: this.nameElement.value,
                 lastName: this.lastNameElement.value,

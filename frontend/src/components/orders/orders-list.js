@@ -1,9 +1,13 @@
+import { AuthUtils } from '../../utils/auth-utils'
 import { CommonUtils } from '../../utils/common-utils'
 import { HttpUtils } from '../../utils/http-utils'
 
 export class OrdersList {
     constructor(openNewRoute) {
         this.openNewRoute = openNewRoute
+        if (AuthUtils.getAuthInfo(AuthUtils.accessTokenKey)) {
+            return this.openNewRoute('/')
+        }
         this.getOrderers().then()
     }
 

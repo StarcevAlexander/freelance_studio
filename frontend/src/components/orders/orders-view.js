@@ -1,4 +1,5 @@
 import config from '../../config/config';
+import { AuthUtils } from '../../utils/auth-utils';
 import { CommonUtils } from '../../utils/common-utils';
 import { HttpUtils } from '../../utils/http-utils';
 
@@ -10,9 +11,10 @@ export class OrdersView {
         if (!id) {
             return this.openNewRoute('/')
         }
-        if (id) {
-            this.getOrder(id).then()
+        if (AuthUtils.getAuthInfo(AuthUtils.accessTokenKey)) {
+            return this.openNewRoute('/')
         }
+        this.getOrder(id).then()
         document.getElementById('edit-link').href = '/orders/edit?id=' + id
         document.getElementById('delete-link').href = '/orders/delete?id=' + id
     }
