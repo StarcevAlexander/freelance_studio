@@ -1,7 +1,4 @@
-import config from '../../config/config';
 import { AuthUtils } from '../../utils/auth-utils';
-import { CommonUtils } from '../../utils/common-utils';
-import { FileUtils } from '../../utils/file-utils';
 import { HttpUtils } from '../../utils/http-utils';
 import { UrlUtils } from '../../utils/url-utils';
 import { ValidationUtils } from '../../utils/validation-utils';
@@ -43,7 +40,6 @@ export class OrdersEdit {
     }
 
     async init(id) {
-
         const orderData = await this.getOrder(id)
         if (orderData) {
             this.showOrder(orderData)
@@ -109,21 +105,8 @@ export class OrdersEdit {
         const calendarComplete = $('#calendar-complete')
         const calendarDeadline = $('#calendar-deadline')
 
-        calendarScheduled.datetimepicker({
-            // format: 'L',
-            locale: 'ru',
-            inline: true,
-            icons: {
-                time: 'far fa-clock'
-            },
-            useCurrent: false,
-            buttons: {
-                showClear: true
-            },
-            date: order.scheduledDate
 
-        })
-        calendarComplete.datetimepicker({
+        const calendarOptions = {
             locale: 'ru',
             inline: true,
             icons: {
@@ -132,21 +115,12 @@ export class OrdersEdit {
             useCurrent: false,
             buttons: {
                 showClear: true
-            },
-            date: order.completeDate ? order.completeDate : ""
-        })
-        calendarDeadline.datetimepicker({
-            locale: 'ru',
-            inline: true,
-            icons: {
-                time: 'far fa-clock'
-            },
-            useCurrent: false,
-            buttons: {
-                showClear: true
-            },
-            date: order.deadlineDate
-        })
+            }
+        }
+        calendarScheduled.datetimepicker(Object.assign({}, calendarOptions, { date: order.scheduledDate }))
+        calendarComplete.datetimepicker(Object.assign({}, calendarOptions, { date: order.completeDate ? order.completeDate : "" }))
+        calendarDeadline.datetimepicker(Object.assign({}, calendarOptions, { date: order.deadlineDate }))
+
         calendarScheduled.on("change.datetimepicker", (e) => {
             if (e.date) {
                 this.scheduledDate = e.date

@@ -15,8 +15,7 @@ export class OrdersCreate {
         this.completeDate = null
         this.deadlinedDate = null
 
-        calendarScheduled.datetimepicker({
-            // format: 'L',
+        const calendarOptions = {
             locale: 'ru',
             inline: true,
             icons: {
@@ -26,30 +25,12 @@ export class OrdersCreate {
             buttons: {
                 showClear: true
             }
+        }
 
-        })
-        calendarComplete.datetimepicker({
-            locale: 'ru',
-            inline: true,
-            icons: {
-                time: 'far fa-clock'
-            },
-            useCurrent: false,
-            buttons: {
-                showClear: true
-            }
-        })
-        calendarDeadline.datetimepicker({
-            locale: 'ru',
-            inline: true,
-            icons: {
-                time: 'far fa-clock'
-            },
-            useCurrent: false,
-            buttons: {
-                showClear: true
-            }
-        })
+        calendarScheduled.datetimepicker(calendarOptions)
+        calendarComplete.datetimepicker(calendarOptions)
+        calendarDeadline.datetimepicker(calendarOptions)
+
         calendarScheduled.on("change.datetimepicker", (e) => {
             this.scheduledDate = e.date
             this.validations[2].options.checkProperty = true
@@ -110,11 +91,6 @@ export class OrdersCreate {
 
     async saveOrder(e) {
         e.preventDefault()
-
-        console.log(this.scheduledDate);
-
-        console.log(this.validations[2].options);
-
         if (ValidationUtils.validateForm(this.validations)) {
             const createdData = {
                 description: this.descriptionInputElement.value,

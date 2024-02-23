@@ -9,7 +9,6 @@ export class Dashboard {
             return this.openNewRoute('/login')
         }
         this.getOrders().then()
-
     }
 
     async getOrders() {
@@ -20,7 +19,6 @@ export class Dashboard {
         if (result.error || !result.response || (result.response && result.response.error || !result.response.orders)) {
             alert('возникла ошибка при запросе заказов. обратитесь в поддержку')
         }
-
         this.loadOrdersInfo(result.response.orders)
         this.loadCalendarInfo(result.response.orders)
     }
@@ -33,47 +31,39 @@ export class Dashboard {
 
     loadCalendarInfo(orders) {
         const preparedEvents = []
-
         for (let index = 0; index < orders.length; index++) {
-
             let color = null
             if (orders[index].status === config.orderStatuses.success) {
                 color = 'grey'
             }
-
             if (orders[index].scheduledDate) {
-                const scheduledDate = new Date(orders[index].scheduledDate)
                 preparedEvents.push({
                     title: `${orders[index].freelancer.name} ${orders[index].freelancer.lastName} выполняет заказ ${orders[index].number}`,
-                    start: scheduledDate,
+                    start: new Date(orders[index].scheduledDate),
                     backgroundColor: color ? color : '#00c0ef',
                     borderColor: color ? color : '#00c0ef',
                     allDay: true
                 })
             }
             if (orders[index].completeDate) {
-                const completeDate = new Date(orders[index].completeDate)
                 preparedEvents.push({
                     title: `Заказ ${orders[index].number} выполнен фрилансером ${orders[index].freelancer.name}`,
-                    start: completeDate,
+                    start: new Date(orders[index].completeDate),
                     backgroundColor: color ? color : '#00a65a',
                     borderColor: color ? color : '#00a65a',
                     allDay: true
                 })
             }
             if (orders[index].deadlineDate) {
-                const deadlineDate = new Date(orders[index].deadlineDate)
                 preparedEvents.push({
                     title: `Дедлайн заказа ${orders[index].number}`,
-                    start: deadlineDate,
+                    start: new Date(orders[index].deadlineDate),
                     backgroundColor: color ? color : '#f39c12',
                     borderColor: color ? color : '#f39c12',
                     allDay: true
                 })
             }
-
         }
-
         const calendarElement = document.getElementById('calendar');
         const calendar = new FullCalendar.Calendar(calendarElement, {
             headerToolbar: {

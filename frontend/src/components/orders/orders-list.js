@@ -26,19 +26,17 @@ export class OrdersList {
     showRecords(orders) {
         const recordsElement = document.getElementById('records')
         for (let index = 0; index < orders.length; index++) {
+            const statusInfo = CommonUtils.getStatusInfo(orders[index].status)
+
             const trElement = document.createElement('tr')
             trElement.insertCell().innerText = orders[index].number
             trElement.insertCell().innerText = `${orders[index].owner.name} ${orders[index].owner.lastName}`
             trElement.insertCell().innerHTML = `<a href="/freelancers/view?id=${orders[index].freelancer.id}">${orders[index].freelancer.name} ${orders[index].freelancer.lastName}</a>`
-
             trElement.insertCell().innerText = (new Date(orders[index].scheduledDate)).toLocaleString('ru-RU')
             trElement.insertCell().innerText = (new Date(orders[index].deadlineDate)).toLocaleString('ru-RU')
-
-            const statusInfo = CommonUtils.getStatusInfo(orders[index].status)
-            trElement.insertCell().innerHTML = '<span class="badge badge-' + statusInfo.color + '">' + statusInfo.name + '</span>'
-
+            trElement.insertCell().innerHTML = `<span class="p-2 badge badge-${statusInfo.color}">${statusInfo.name}</span>`
             trElement.insertCell().innerText = orders[index].completeDate ? (new Date(orders[index].completeDate)).toLocaleString('ru-RU') : ''
-            trElement.insertCell().innerHTML = '<div class ="orders-tools">' + `<a href='/orders/view?id=${orders[index].id} ' class='fas fa-eye'></a >` + `<a href='/orders/edit?id=${orders[index].id}' class='fas fa-edit'></a >` + `<a href='/orders/delete?id=${orders[index].id}' class='fas fa-trash'></a >` + '</div>'
+            trElement.insertCell().innerHTML = `<div class ="orders-tools"><a href='/orders/view?id=${orders[index].id}' class='fas fa-eye'></a ><a href='/orders/edit?id=${orders[index].id}' class='fas fa-edit'></a ><a href='/orders/delete?id=${orders[index].id}' class='fas fa-trash'></a ></div>`
             recordsElement.appendChild(trElement)
         }
 

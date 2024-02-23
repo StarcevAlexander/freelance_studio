@@ -35,7 +35,7 @@ export class FreelancersList {
             trElement.insertCell().innerText = freelancers[index].education
             trElement.insertCell().innerText = freelancers[index].location
             trElement.insertCell().innerText = freelancers[index].skills
-            trElement.insertCell().innerHTML = '<div class ="freelancer-tools">' + `<a href='/freelancers/view?id=${freelancers[index].id} ' class='fas fa-eye'></a >` + `<a href='/freelancers/edit?id=${freelancers[index].id}' class='fas fa-edit'></a >` + `<a href='/freelancers/delete?id=${freelancers[index].id}' class='fas fa-trash'></a >` + '</div>'
+            trElement.insertCell().innerHTML = `<div class ="freelancer-tools"><a href='/freelancers/view?id=${freelancers[index].id}' class='fas fa-eye'></a ><a href='/freelancers/edit?id=${freelancers[index].id}' class='fas fa-edit'></a ><a href='/freelancers/delete?id=${freelancers[index].id}' class='fas fa-trash'></a ></div>`
             recordsElement.appendChild(trElement)
         }
 

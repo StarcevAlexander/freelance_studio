@@ -9,13 +9,8 @@ export class SignUp {
             return this.openNewRoute('/')
         }
 
-        this.nameElement = document.getElementById('name')
-        this.lastNameElement = document.getElementById('lastName')
-        this.emailElement = document.getElementById('email')
-        this.passwordElement = document.getElementById('password')
-        this.passwordRepeatElement = document.getElementById('password-repeat')
-        this.agreeElement = document.getElementById('agree')
-        this.commonErrorElement = document.getElementById('common-error')
+        this.findElements()
+
         document.getElementById('process-button').addEventListener('click', this.signup.bind(this))
 
         this.validations = [
@@ -28,6 +23,15 @@ export class SignUp {
         ]
     }
 
+    findElements() {
+        this.nameElement = document.getElementById('name')
+        this.lastNameElement = document.getElementById('lastName')
+        this.emailElement = document.getElementById('email')
+        this.passwordElement = document.getElementById('password')
+        this.passwordRepeatElement = document.getElementById('password-repeat')
+        this.agreeElement = document.getElementById('agree')
+        this.commonErrorElement = document.getElementById('common-error')
+    }
     async signup() {
         this.commonErrorElement.style.display = 'none'
         for (let index = 0; index < this.validations.length; index++) {
